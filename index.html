@@ -102,6 +102,12 @@
   /* ---------- test ---------- */
   .topbar{display:flex;align-items:center;gap:14px;padding:16px 0 12px;position:sticky;top:0;background:var(--paper);z-index:10}
   .topbar .mini{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:15px;color:var(--accent)}
+  .timeleft{display:flex;align-items:center;gap:5px;font-weight:700;font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:58px;transition:color .3s ease}
+  .timeleft svg{width:15px;height:15px}
+  .timeleft b{font-weight:700}
+  .timeleft.warn{color:var(--amber)}
+  .timeleft.crit{color:var(--bad);animation:tick 1s steps(2) infinite}
+  @keyframes tick{50%{opacity:.45}}
   .track{flex:1;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
   .fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--amber));transition:width .3s ease}
   .counter{font-size:13.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;min-width:46px;text-align:right}
@@ -253,7 +259,10 @@
   <!-- ============ TEST ============ -->
   <section id="scr-test" hidden>
     <div class="topbar">
-      <span class="mini">C</span>
+      <span class="timeleft" id="timeleft" aria-label="Kalan süre">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 6 V9 L10 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 2 H10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <b id="timeval">15:00</b>
+      </span>
       <div class="track"><div class="fill" id="pfill"></div></div>
       <span class="counter" id="pcount">1/30</span>
     </div>
@@ -595,7 +604,9 @@ const CATNAMES={oruntu:'Örüntü Tanıma',mantik:'Mantıksal Çıkarım',uzamsa
 
 /* ---------- durum ---------- */
 const N=QUESTIONS.length;
+const TOTAL_SEC=15*60;               /* toplam süre — tek satırdan değiştirilir */
 let answers=Array(N).fill(null),cur=0,startTime=0,elapsed=0,gender=null;
+let deadline=0,timerId=null;
 const $=id=>document.getElementById(id);
 const scr={landing:$('scr-landing'),test:$('scr-test'),calc:$('scr-calc'),pay:$('scr-pay'),result:$('scr-result')};
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -660,9 +671,33 @@ function finishAttempt(){
   } else finish();
 }
 
+/* ---------- süre ---------- */
+function startTimer(){
+  deadline=Date.now()+TOTAL_SEC*1000;
+  tickTimer();
+  timerId=setInterval(tickTimer,1000);
+}
+function stopTimer(){ if(timerId){clearInterval(timerId);timerId=null} }
+function fmtSec(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function resetTimerLabel(){$('timeleft').classList.remove('warn','crit');$('timeval').textContent=fmtSec(TOTAL_SEC)}
+function tickTimer(){
+  const rem=Math.max(0,Math.round((deadline-Date.now())/1000));
+  const el=$('timeleft');
+  $('timeval').textContent=fmtSec(rem);
+  el.classList.toggle('warn',rem<=120&&rem>30);
+  el.classList.toggle('crit',rem<=30);
+  if(rem<=0){ stopTimer(); timeUp(); }
+}
+function timeUp(){
+  const ov=document.querySelector('.overlay'); if(ov)ov.remove();
+  toast('Süre doldu — sonucun hesaplanıyor');
+  finish();
+}
+
 /* ---------- hesaplama ---------- */
 function finish(){
-  elapsed=Math.round((Date.now()-startTime)/1000);
+  stopTimer();
+  elapsed=Math.min(TOTAL_SEC,Math.round((Date.now()-startTime)/1000));
   show('calc');
   const steps=[...$('calcsteps').children];
   steps.forEach(s=>s.classList.remove('on'));
@@ -728,12 +763,13 @@ function unlock(){
 document.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',()=>{
   gender=b.getAttribute('data-start');
   answers=Array(N).fill(null);cur=0;startTime=Date.now();
-  show('test');render();
+  show('test');render();startTimer();
 }));
 $('btn-back').addEventListener('click',()=>{if(cur>0){cur--;render()}});
 $('btn-skip').addEventListener('click',()=>{if(cur<N-1){cur++;render()}else finishAttempt()});
 $('btn-unlock').addEventListener('click',()=>{toast('Prototip: ödeme adımı atlandı');unlock()});
-$('btn-restart').addEventListener('click',()=>{show('landing')});
+$('btn-restart').addEventListener('click',()=>{stopTimer();resetTimerLabel();show('landing')});
+resetTimerLabel();
 </script>
 </body>
 </html>
