@@ -1,0 +1,739 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="30 soruluk görsel mantık IQ testi: örüntü, mantık, uzamsal algı ve sayısal akıl yürütme.">
+<meta name="theme-color" content="#0B7285">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<style>[hidden]{display:none!important}html,body{margin:0;padding:0}</style>
+<title>Cortiq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2F6F6;
+    --card:#FFFFFF;
+    --ink:#122A30;
+    --muted:#5B7278;
+    --line:#D8E3E3;
+    --accent:#0B7285;
+    --accent-soft:#E3F0F2;
+    --accent-ink:#FFFFFF;
+    --amber:#E8A13C;
+    --good:#2F9E62;
+    --bad:#D5504A;
+    --shadow:0 1px 2px rgba(18,42,48,.06),0 8px 24px rgba(18,42,48,.07);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0C191D;
+      --card:#13252B;
+      --ink:#E8F1F2;
+      --muted:#8FA6AB;
+      --line:#22383E;
+      --accent:#43B6C9;
+      --accent-soft:#123239;
+      --accent-ink:#06272E;
+      --amber:#E0A94F;
+      --good:#4CB47E;
+      --bad:#E06A64;
+      --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0C191D;
+    --card:#13252B;
+    --ink:#E8F1F2;
+    --muted:#8FA6AB;
+    --line:#22383E;
+    --accent:#43B6C9;
+    --accent-soft:#123239;
+    --accent-ink:#06272E;
+    --amber:#E0A94F;
+    --good:#4CB47E;
+    --bad:#E06A64;
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.35);
+  }
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding:0 18px 28px;box-sizing:border-box}
+  h1,h2,h3{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;text-wrap:balance;margin:0}
+  button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+  button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+
+  /* ---------- shared ---------- */
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:15px 22px;font-weight:700;font-size:16px;transition:transform .12s ease,box-shadow .12s ease}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);box-shadow:var(--shadow)}
+  .btn-primary:hover{transform:translateY(-1px)}
+  .btn-primary:active{transform:translateY(0)}
+  .btn-ghost{border:1.5px solid var(--line);color:var(--ink);background:var(--card)}
+  .btn-ghost:hover{border-color:var(--accent)}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,8px);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;max-width:90vw;text-align:center;z-index:50}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+
+  /* ---------- landing ---------- */
+  .hero{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding-top:34px}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .brand svg{width:40px;height:40px;color:var(--accent)}
+  .brand b{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em}
+  .proto-chip{margin-top:10px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);border:1.5px solid var(--amber);border-radius:999px;padding:3px 12px}
+  .hero h1{font-size:36px;font-weight:800;line-height:1.12;letter-spacing:-.02em;margin-top:22px}
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .checks{display:flex;flex-direction:column;gap:14px;margin:28px 0 4px;text-align:left;width:100%}
+  .checks li{display:flex;gap:12px;align-items:flex-start;list-style:none}
+  .checks .ic{flex:none;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;margin-top:1px}
+  .checks .ic svg{width:14px;height:14px}
+  .checks b{font-weight:700}
+  .genders{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;margin-top:26px}
+  .start-plain{margin-top:14px;font-size:14.5px;font-weight:600;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+  .start-plain:hover{color:var(--accent)}
+  .avg{margin-top:22px;font-size:14px;color:var(--muted)}
+  .avg b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .fineprint{margin-top:26px;font-size:12.5px;line-height:1.6;color:var(--muted);max-width:40ch}
+
+  /* ---------- test ---------- */
+  .topbar{display:flex;align-items:center;gap:14px;padding:16px 0 12px;position:sticky;top:0;background:var(--paper);z-index:10}
+  .topbar .mini{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:15px;color:var(--accent)}
+  .track{flex:1;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+  .fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--amber));transition:width .3s ease}
+  .counter{font-size:13.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;min-width:46px;text-align:right}
+  .qprompt{font-size:19px;font-weight:700;line-height:1.35;margin:10px 0 16px}
+  .qmain{margin-bottom:18px}
+  .tiles{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .tile{min-width:52px;height:52px;padding:0 8px;border-radius:12px;background:var(--card);border:1.5px solid var(--line);display:grid;place-items:center;font-weight:700;font-size:19px;font-variant-numeric:tabular-nums;box-sizing:border-box}
+  .tile.q{border-style:dashed;border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+  .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:300px;margin:0 auto}
+  .mgrid .cell{aspect-ratio:1;border-radius:12px;background:var(--card);border:1.5px solid var(--line);display:grid;place-items:center;padding:8px;box-sizing:border-box;color:var(--ink);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums}
+  .mgrid .cell svg{width:100%;height:100%}
+  .mgrid .cell.q{border-style:dashed;border-color:var(--accent);color:var(--accent);background:var(--accent-soft);font-size:24px}
+  .figure{max-width:190px;margin:0 auto;aspect-ratio:1;border-radius:16px;background:var(--card);border:1.5px solid var(--line);padding:14px;box-sizing:border-box;color:var(--ink)}
+  .figure svg{width:100%;height:100%}
+  .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .opt{position:relative;aspect-ratio:1;border-radius:14px;background:var(--card);border:2px solid var(--line);display:grid;place-items:center;padding:10px;box-sizing:border-box;color:var(--ink);transition:border-color .12s ease,transform .12s ease}
+  .opt:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .opt svg{width:100%;height:100%}
+  .opt .letter{position:absolute;top:6px;left:9px;font-size:11px;font-weight:700;color:var(--muted)}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .letter{color:var(--accent)}
+  .opt-num{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums}
+  .testfoot{display:flex;gap:10px;margin-top:20px}
+  .testfoot .btn{flex:1;padding:13px 16px;font-size:15px}
+  .dots{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:18px}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--line);transition:background .15s ease}
+  .dot.done{background:var(--accent)}
+  .dot.cur{box-shadow:0 0 0 2.5px var(--paper),0 0 0 4.5px var(--amber)}
+
+  /* ---------- overlay / modal ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(10,20,24,.5);display:grid;place-items:center;padding:24px;z-index:40}
+  .sheet{background:var(--card);border-radius:20px;padding:26px 22px;max-width:340px;width:100%;box-shadow:var(--shadow);text-align:center}
+  .sheet h3{font-size:20px;margin-bottom:8px}
+  .sheet p{margin:0 0 18px;color:var(--muted);font-size:15px}
+  .sheet .btn{width:100%;box-sizing:border-box}
+  .sheet .btn + .btn{margin-top:10px}
+
+  /* ---------- calc ---------- */
+  .calc{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center}
+  .spinner{width:52px;height:52px;border-radius:50%;border:5px solid var(--line);border-top-color:var(--accent);animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(1turn)}}
+  .steps{display:flex;flex-direction:column;gap:12px;text-align:left}
+  .steps li{list-style:none;display:flex;gap:10px;align-items:center;color:var(--muted);font-weight:600;font-size:15px;opacity:.4;transition:opacity .3s ease,color .3s ease}
+  .steps li.on{opacity:1;color:var(--ink)}
+  .steps li .tick{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;flex:none}
+  .steps li.on .tick{border-color:var(--good);background:var(--good);color:#fff}
+  .steps li .tick svg{width:11px;height:11px;visibility:hidden}
+  .steps li.on .tick svg{visibility:visible}
+
+  /* ---------- paywall ---------- */
+  .pay{flex:1;display:flex;flex-direction:column;padding-top:30px;gap:20px}
+  .pay h2{font-size:29px;font-weight:800;letter-spacing:-.01em;text-align:center}
+  .preview{position:relative;border-radius:18px;overflow:hidden;border:1.5px solid var(--line);background:var(--card);padding:26px;text-align:center}
+  .preview .blurwrap{filter:blur(12px);user-select:none;pointer-events:none}
+  .preview .bignum{font-family:"Bricolage Grotesque",sans-serif;font-size:64px;font-weight:800;line-height:1}
+  .preview .lock{position:absolute;inset:0;display:grid;place-items:center}
+  .preview .lock .badge{background:var(--ink);color:var(--paper);border-radius:999px;padding:8px 18px;font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center}
+  .preview .lock svg{width:15px;height:15px}
+  .paycard{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+  .paycard ul{margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:10px}
+  .paycard li{list-style:none;display:flex;gap:10px;align-items:center;font-size:15px;font-weight:600}
+  .paycard li svg{width:17px;height:17px;color:var(--good);flex:none}
+  .price{display:flex;align-items:baseline;gap:8px;justify-content:center;margin-bottom:4px}
+  .price b{font-family:"Bricolage Grotesque",sans-serif;font-size:38px;font-weight:800;font-variant-numeric:tabular-nums}
+  .price span{color:var(--muted);font-weight:600}
+  .noSub{text-align:center;color:var(--muted);font-size:13.5px;margin:0 0 16px}
+  .protonote{font-size:12.5px;color:var(--muted);text-align:center;line-height:1.55;margin-top:2px}
+
+  /* ---------- result ---------- */
+  .result{flex:1;display:flex;flex-direction:column;padding-top:26px;gap:20px}
+  .cert{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:28px 22px;text-align:center;box-shadow:var(--shadow)}
+  .cert .eyebrow{color:var(--accent)}
+  .iqnum{font-family:"Bricolage Grotesque",sans-serif;font-size:76px;font-weight:800;line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin:6px 0 2px}
+  .pctline{color:var(--muted);font-size:15px}
+  .pctline b{color:var(--ink)}
+  .meter{margin-top:20px}
+  .meter .bar{position:relative;height:10px;border-radius:99px;background:linear-gradient(90deg,var(--line),var(--accent) 55%,var(--amber))}
+  .meter .pin{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--card);border:4px solid var(--ink);transform:translate(-50%,-50%);transition:left .8s cubic-bezier(.2,.8,.2,1)}
+  .meter .lbls{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:7px;font-variant-numeric:tabular-nums}
+  .cats{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:22px}
+  .cats h3{font-size:17px;margin-bottom:16px}
+  .cat{margin-bottom:14px}
+  .cat:last-child{margin-bottom:0}
+  .cat .row{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:6px}
+  .cat .row span:last-child{color:var(--muted);font-variant-numeric:tabular-nums}
+  .cat .bg{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+  .cat .fg{height:100%;width:0;border-radius:99px;background:var(--accent);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .statrow{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+  .stat{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13.5px;font-weight:600;color:var(--muted)}
+  .stat b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .disclaim{font-size:12px;color:var(--muted);text-align:center;line-height:1.6;max-width:44ch;margin:4px auto 0}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ LANDING ============ -->
+  <section id="scr-landing" class="hero">
+    <div class="brand">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+          <path d="M14 34 L24 14 L34 34"/>
+          <path d="M18 26 L30 26"/>
+        </g>
+        <circle cx="24" cy="14" r="4.4" fill="currentColor"/>
+        <circle cx="14" cy="34" r="4.4" fill="currentColor"/>
+        <circle cx="34" cy="34" r="4.4" fill="currentColor"/>
+        <circle cx="18" cy="26" r="3" fill="currentColor"/>
+        <circle cx="30" cy="26" r="3" fill="currentColor"/>
+      </svg>
+      <b>Cortiq</b>
+    </div>
+    <span class="proto-chip">Prototip</span>
+    <h1>Zihnin gerçekte<br>kaç <em>çeker?</em></h1>
+
+    <ul class="checks">
+      <li>
+        <span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg></span>
+        <span><b>30 soru</b>, kolaydan zora sıralı — görsel mantık, örüntü ve sayısal akıl yürütme</span>
+      </li>
+      <li>
+        <span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg></span>
+        <span>Her soruda <b>6 seçenek</b>, tek doğru cevap</span>
+      </li>
+      <li>
+        <span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg></span>
+        <span>Soruları <b>atlayabilir</b>, bitirmeden önce geri dönebilirsin</span>
+      </li>
+    </ul>
+
+    <div class="genders">
+      <button type="button" class="btn btn-primary" data-start="e">Erkek</button>
+      <button type="button" class="btn btn-primary" data-start="k">Kadın</button>
+    </div>
+    <button type="button" class="start-plain" data-start="x">Belirtmeden başla</button>
+
+    <p class="avg">Bugünün ortalama puanı: <b>104</b> · temsili veri</p>
+
+    <p class="fineprint">
+      Sonuç sayfası tek seferlik ücretle açılır; abonelik yoktur. Bu prototipte ödeme adımı temsilidir.
+      Test yalnızca eğlence ve eğitim amaçlıdır; tıbbi, psikolojik veya profesyonel bir değerlendirme değildir.
+    </p>
+  </section>
+
+  <!-- ============ TEST ============ -->
+  <section id="scr-test" hidden>
+    <div class="topbar">
+      <span class="mini">C</span>
+      <div class="track"><div class="fill" id="pfill"></div></div>
+      <span class="counter" id="pcount">1/30</span>
+    </div>
+    <h2 class="qprompt" id="qprompt"></h2>
+    <div class="qmain" id="qmain"></div>
+    <div class="opts" id="qopts"></div>
+    <div class="testfoot">
+      <button type="button" class="btn btn-ghost" id="btn-back">← Geri</button>
+      <button type="button" class="btn btn-ghost" id="btn-skip">Atla →</button>
+    </div>
+    <div class="dots" id="dots"></div>
+  </section>
+
+  <!-- ============ CALC ============ -->
+  <section id="scr-calc" class="calc" hidden>
+    <div class="spinner" aria-hidden="true"></div>
+    <h2 style="font-size:24px">Sonucun hesaplanıyor</h2>
+    <ul class="steps" id="calcsteps">
+      <li><span class="tick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg></span>Cevaplar analiz ediliyor</li>
+      <li><span class="tick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg></span>Kategoriler puanlanıyor</li>
+      <li><span class="tick"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg></span>Norm grubuyla karşılaştırılıyor</li>
+    </ul>
+  </section>
+
+  <!-- ============ PAYWALL ============ -->
+  <section id="scr-pay" class="pay" hidden>
+    <h2>Sonucun hazır.</h2>
+    <div class="preview">
+      <div class="blurwrap">
+        <div class="eyebrow">IQ Puanın</div>
+        <div class="bignum">1?7</div>
+        <div style="color:var(--muted);font-weight:600">Katılımcıların %8?'inden yüksek</div>
+      </div>
+      <div class="lock">
+        <span class="badge">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a3.5 3.5 0 0 0-3.5 3.5V6H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 14h8a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 12 6h-.5V4.5A3.5 3.5 0 0 0 8 1Zm2 5H6V4.5a2 2 0 1 1 4 0V6Z"/></svg>
+          Kilitli
+        </span>
+      </div>
+    </div>
+    <div class="paycard">
+      <ul>
+        <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg>IQ puanın ve yüzdelik dilimin</li>
+        <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg>4 kategoride güçlü / gelişime açık yön analizi</li>
+        <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg>Paylaşılabilir sonuç kartı</li>
+      </ul>
+      <div class="price"><b>₺99</b><span>tek seferlik</span></div>
+      <p class="noSub">Abonelik yok. Gizli ücret yok.</p>
+      <button type="button" class="btn btn-primary" id="btn-unlock" style="width:100%;box-sizing:border-box">Sonucumu aç</button>
+    </div>
+    <p class="protonote">Prototip: ödeme adımı temsilidir, buton sonucu doğrudan açar.<br>Canlı sürümde iyzico / Stripe bağlanacak.</p>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="scr-result" class="result" hidden>
+    <div class="cert">
+      <div class="eyebrow">Cortiq IQ Sonucu</div>
+      <div class="iqnum" id="iqnum">0</div>
+      <p class="pctline">Katılımcıların <b id="pcttxt">%–</b>'inden yüksek puan aldın</p>
+      <div class="meter">
+        <div class="bar"><div class="pin" id="iqpin" style="left:0%"></div></div>
+        <div class="lbls"><span>60</span><span>90</span><span>120</span><span>150</span></div>
+      </div>
+    </div>
+    <div class="cats">
+      <h3>Kategori analizi</h3>
+      <div id="catbars"></div>
+    </div>
+    <div class="statrow" id="statrow"></div>
+    <p class="disclaim">
+      Puanlama prototip normlamasıyla hesaplanır; canlı sürümde gerçek katılımcı verisiyle kalibre edilecektir.
+      Bu test eğlence ve eğitim amaçlıdır; tıbbi veya psikolojik bir değerlendirme değildir.
+    </p>
+    <button type="button" class="btn btn-ghost" id="btn-restart">Testi tekrarla</button>
+  </section>
+
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+'use strict';
+/* ============================================================
+   Cortiq — soru motoru
+   Tüm sorular kod tarafından, sabit tohumlarla (seed) üretilir:
+   telif yok, her yüklemede aynı test.
+   ============================================================ */
+
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function ri(rng,min,max){return min+Math.floor(rng()*(max-min+1))}
+function shuffled(rng,arr){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function norm360(a){return ((a%360)+360)%360}
+
+/* ---------- SVG parçaları ---------- */
+const SW='stroke="currentColor" stroke-width="5" fill="none" stroke-linejoin="round"';
+function svgW(inner){return '<svg viewBox="0 0 100 100" aria-hidden="true">'+inner+'</svg>'}
+function rot(inner,a){return a?'<g transform="rotate('+a+' 50 50)">'+inner+'</g>':inner}
+function mirrorH(inner){return '<g transform="translate(100 0) scale(-1 1)">'+inner+'</g>'}
+function scaleG(inner,s){return s===1?inner:'<g transform="translate(50 50) scale('+s+') translate(-50 -50)">'+inner+'</g>'}
+
+const SHAPES={
+  arrow:'<path d="M50 12 L78 52 L60 52 L60 88 L40 88 L40 52 L22 52 Z" fill="currentColor"/>',
+  halfsq:'<rect x="24" y="24" width="52" height="52" '+SW+'/><path d="M24 24 h52 v26 h-52 Z" fill="currentColor"/>',
+  flag:'<path d="M45 10 h9 v80 h-9 Z" fill="currentColor"/><path d="M54 14 L88 26 L54 42 Z" fill="currentColor"/>',
+  fblock:'<path d="M32 14 h13 v72 h-13 Z M45 14 h28 v13 h-28 Z M45 42 h19 v12 h-19 Z" fill="currentColor"/>'
+};
+function baseShape(kind,style){
+  let solid='fill="currentColor"', line=SW;
+  let b;
+  if(kind==='circle') b=f=>'<circle cx="50" cy="50" r="30" '+f+'/>';
+  else if(kind==='square') b=f=>'<rect x="23" y="23" width="54" height="54" rx="4" '+f+'/>';
+  else b=f=>'<path d="M50 16 L83 79 L17 79 Z" '+f+'/>'; // tri
+  if(style==='s') return b(solid);
+  if(style==='o') return b(line);
+  return b(line)+'<circle cx="50" cy="'+(kind==='tri'?60:50)+'" r="8" fill="currentColor"/>';
+}
+const DICE={
+  1:[[50,50]],2:[[30,30],[70,70]],3:[[28,28],[50,50],[72,72]],
+  4:[[30,30],[70,30],[30,70],[70,70]],5:[[30,30],[70,30],[50,50],[30,70],[70,70]],
+  6:[[30,26],[70,26],[30,50],[70,50],[30,74],[70,74]],
+  7:[[30,26],[70,26],[30,50],[50,50],[70,50],[30,74],[70,74]],
+  8:[[30,26],[50,26],[70,26],[30,50],[70,50],[30,74],[50,74],[70,74]],
+  9:[[30,26],[50,26],[70,26],[30,50],[50,50],[70,50],[30,74],[50,74],[70,74]]
+};
+function diceSvg(n){return svgW(DICE[n].map(p=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="8.5" fill="currentColor"/>').join(''))}
+function scatterSvg(rng,n){
+  const cells=shuffled(rng,[[27,27],[50,27],[73,27],[27,50],[50,50],[73,50],[27,73],[50,73],[73,73]]).slice(0,n);
+  return svgW(cells.map(p=>'<circle cx="'+(p[0]+ri(rng,-6,6))+'" cy="'+(p[1]+ri(rng,-6,6))+'" r="8" fill="currentColor"/>').join(''));
+}
+const XPOS4=[[32,32],[68,32],[32,68],[68,68]];
+const XPOS9=[[28,28],[50,28],[72,28],[28,50],[50,50],[72,50],[28,72],[50,72],[72,72]];
+function maskSvg(m,bits){
+  bits=bits||4;
+  const pos=bits===9?XPOS9:XPOS4, r=bits===9?7.5:10;
+  let s='<rect x="12" y="12" width="76" height="76" rx="10" fill="none" stroke="currentColor" stroke-width="3" opacity=".28"/>';
+  for(let b=0;b<bits;b++) if(m&(1<<b)) s+='<circle cx="'+pos[b][0]+'" cy="'+pos[b][1]+'" r="'+r+'" fill="currentColor"/>';
+  return svgW(s);
+}
+function numTile(v,q){return '<div class="tile'+(q?' q':'')+'">'+v+'</div>'}
+function gridMain(cells){ // cells: {svg|txt|q}
+  return '<div class="mgrid">'+cells.map(c=>
+    c.q?'<div class="cell q">?</div>':'<div class="cell">'+(c.svg||c.txt)+'</div>').join('')+'</div>';
+}
+function numOpts(rng,ans,cands){
+  const set=new Set([ans]);const out=[ans];
+  for(const c of cands){if(out.length>=6)break;if(c>0&&!set.has(c)){set.add(c);out.push(c)}}
+  let guard=0;
+  while(out.length<6&&guard++<99){const c=ans+ri(rng,-12,12);if(c>0&&!set.has(c)){set.add(c);out.push(c)}}
+  return out.map(v=>({html:'<span class="opt-num">'+v+'</span>',key:'n'+v,ok:v===ans}));
+}
+function finishQ(rng,prompt,main,opts,cat,d){
+  const sh=shuffled(rng,opts);
+  return {prompt,main,options:sh,correct:sh.findIndex(o=>o.ok),cat,d};
+}
+
+/* ---------- Soru üreticileri ---------- */
+const GEN={
+  numSeq(s,rng){
+    let seq=[],ans,cands=[];
+    if(s.k==='mul'){const a=ri(rng,2,3),r=ri(rng,2,3);let v=a;for(let i=0;i<4;i++){seq.push(v);v*=r}ans=v;cands=[ans+r,ans-r,seq[3]+r,ans*r,ans-1]}
+    else if(s.k==='square'){const k=ri(rng,1,3);for(let i=0;i<4;i++)seq.push((k+i)*(k+i));ans=(k+4)*(k+4);cands=[ans-1,ans+1,ans-2*(k+4)+1,ans+2*(k+4)+1,seq[3]+seq[2]]}
+    else if(s.k==='fib'){let a=ri(rng,1,4),b=ri(rng,2,5);seq=[a,b,a+b,a+2*b];ans=2*a+3*b;cands=[ans+1,ans-1,seq[3]+seq[2]-1,seq[3]*2,ans+2]}
+    else if(s.k==='mixop'){const a=ri(rng,4,7),k=ri(rng,2,a-1);let v=a;seq=[a];for(let i=0;i<4;i++){v=(i%2===0)?v*2:v-k;seq.push(v)}ans=seq[4]*2;cands=[ans+k,ans-k,ans+2,ans-2,seq[4]+k]}
+    else if(s.k==='sqoff'){const m=ri(rng,2,4),off=rng()<0.5?1:-1;for(let i=0;i<4;i++)seq.push((m+i)*(m+i)+off);ans=(m+4)*(m+4)+off;cands=[ans-off*2,ans+1,ans-1,ans+2*(m+4)+1,seq[3]+seq[2]]}
+    else if(s.k==='inter'){const a=ri(rng,2,3),b=ri(rng,5,9),d=ri(rng,3,6);seq=[a,b,2*a,b+d,4*a,b+2*d];ans=8*a;cands=[b+3*d,6*a,ans+2,ans-2,4*a+b]}
+    else {const a=ri(rng,2,6),d0=ri(rng,2,4);let v=a,st=d0;seq=[a];for(let i=0;i<3;i++){v+=st;st+=2;seq.push(v)}ans=v+st;cands=[ans-2,ans+2,ans-1,ans+3,v+d0]}
+    const main='<div class="tiles">'+seq.map(v=>numTile(v)).join('')+numTile('?',1)+'</div>';
+    return finishQ(rng,'Diziyi tamamlayan sayı hangisi?',main,numOpts(rng,ans,cands),s.cat,s.d);
+  },
+  numMatrix(s,rng){
+    const rows=[];let ans,cands;
+    if(s.k==='colrule'){
+      for(let r=0;r<2;r++)rows.push([ri(rng,2,9),ri(rng,2,9),ri(rng,2,9)]);
+      rows.push([rows[0][0]+rows[1][0],rows[0][1]+rows[1][1],rows[0][2]+rows[1][2]]);
+      ans=rows[2][2];cands=[ans+1,ans-1,rows[2][0],rows[2][1],ans+2];
+    } else {
+      const mul=s.k!=='add', minus=s.k==='mulminus';
+      for(let r=0;r<3;r++){const a=ri(rng,2,mul?6:9),b=ri(rng,3,mul?6:9);rows.push([a,b,minus?a*b-a:(mul?a*b:a+b)])}
+      ans=rows[2][2];const a=rows[2][0],b=rows[2][1];
+      cands=minus?[a*b,a*b-b,ans+1,ans-1,ans+2]:(mul?[a+b,ans+a,ans-b,ans+1,ans-1]:[a*b,ans+1,ans-1,ans+2,ans-2]);
+    }
+    const cells=[];rows.forEach((row,r)=>row.forEach((v,c)=>cells.push(r===2&&c===2?{q:1}:{txt:String(v)})));
+    return finishQ(rng,'Tablodaki kuralı bul. Soru işaretinin yerine hangi sayı gelmeli?',gridMain(cells),numOpts(rng,ans,cands),s.cat,s.d);
+  },
+  rotSeq(s,rng){
+    const shape=SHAPES[s.shape],start=ri(rng,0,3)*45;
+    let seq,ans;
+    if(s.accel){
+      seq=[0,1,2,3].map(i=>norm360(start+45*(i*(i+1)/2)));
+      ans=norm360(start+45*10);
+    } else {
+      seq=[0,1,2,3].map(i=>norm360(start+i*s.step));
+      ans=norm360(start+4*s.step);
+    }
+    const st=s.accel?45:s.step;
+    const main='<div class="tiles">'+seq.map(a=>'<div class="tile" style="width:56px;height:56px;padding:6px">'+svgW(rot(shape,a))+'</div>').join('')+'<div class="tile q" style="width:56px;height:56px">?</div></div>';
+    const angs=new Set([ans]);const list=[ans];
+    for(const c of [ans+st,ans-st,ans+2*st,seq[3],seq[0],ans+90,ans-90].map(norm360)){
+      if(list.length>=6)break;if(!angs.has(c)){angs.add(c);list.push(c)}}
+    let g=0;while(list.length<6&&g++<40){const c=norm360(ri(rng,0,7)*45);if(!angs.has(c)){angs.add(c);list.push(c)}}
+    const opts=list.map(a=>({html:svgW(rot(shape,a)),key:'a'+a,ok:a===ans}));
+    return finishQ(rng,'Şekil bir kurala göre dönüyor. Sıradaki hangisi?',main,opts,s.cat,s.d);
+  },
+  twoRule(s,rng){
+    const shape=SHAPES.halfsq,start=45*ri(rng,1,4);
+    const seq=[0,1,2,3].map(i=>({a:norm360(start+90*i),sc:i%2?0.62:1}));
+    const ansA=norm360(start),ansS=1;
+    const tile=(a,sc)=>'<div class="tile" style="width:56px;height:56px;padding:6px">'+svgW(rot(scaleG(shape,sc),a))+'</div>';
+    const main='<div class="tiles">'+seq.map(t=>tile(t.a,t.sc)).join('')+'<div class="tile q" style="width:56px;height:56px">?</div></div>';
+    const combos=[[ansA,1],[ansA,0.62],[norm360(ansA+90),1],[norm360(ansA+90),0.62],[norm360(ansA+180),1],[norm360(ansA-90),0.62]];
+    const opts=combos.map(c=>({html:svgW(rot(scaleG(shape,c[1]),c[0])),key:'a'+c[0]+'s'+c[1],ok:c[0]===ansA&&c[1]===ansS}));
+    return finishQ(rng,'Şekil her adımda hem dönüyor hem boyut değiştiriyor. Sıradaki hangisi?',main,opts,s.cat,s.d);
+  },
+  analogy(s,rng){
+    const pair=rng()<0.5?['flag','fblock']:['fblock','flag'];
+    const A=SHAPES[pair[0]],C=SHAPES[pair[1]];
+    const TF={id:i=>i,r90:i=>rot(i,90),r180:i=>rot(i,180),r270:i=>rot(i,270),mh:i=>mirrorH(i),mhr90:i=>rot(mirrorH(i),90)};
+    const tile=inner=>'<div class="tile" style="width:48px;height:48px;padding:5px">'+svgW(inner)+'</div>';
+    const sep='<div class="tile" style="border:none;background:none;min-width:22px;font-size:14px;color:var(--muted)">→</div>';
+    const gap='<div class="tile" style="border:none;background:none;min-width:14px"></div>';
+    const main='<div class="tiles">'+tile(A)+sep+tile(TF[s.k](A))+gap+tile(C)+sep+'<div class="tile q" style="width:48px;height:48px">?</div></div>';
+    const opts=Object.keys(TF).map(k=>({html:svgW(TF[k](C)),key:k,ok:k===s.k}));
+    return finishQ(rng,'İlk şekle uygulanan değişim, ikinci şekle de uygulanırsa sonuç ne olur?',main,opts,s.cat,s.d);
+  },
+  mirror(s,rng){
+    const shape=SHAPES.fblock;
+    const main='<div class="figure">'+svgW(shape)+'</div>';
+    const T={id:i=>i,r90:i=>rot(i,90),r180:i=>rot(i,180),r270:i=>rot(i,270),mh:i=>mirrorH(i),mhr:i=>rot(mirrorH(i),90)};
+    const correctKey=s.k==='rot90'?'r90':(s.k==='mhr'?'mhr':'mh');
+    const prompt=s.k==='rot90'?'Şekil saat yönünde 90° döndürülürse hangisi olur?':(s.k==='mhr'?'Şekil önce dikey aynada yansıtılıp sonra saat yönünde 90° döndürülürse hangisi olur?':'Şeklin dikey aynadaki görüntüsü hangisi?');
+    const opts=Object.keys(T).map(k=>({html:svgW(T[k](shape)),key:k,ok:k===correctKey}));
+    return finishQ(rng,prompt,main,opts,s.cat,s.d);
+  },
+  countMatrix(s,rng){
+    const cells=[];let ans;
+    if(s.k==='rowk'){
+      const bases=[ri(rng,1,2),ri(rng,1,2),ri(rng,1,2)];
+      for(let r=0;r<3;r++)for(let c=0;c<3;c++){const n=bases[r]+(r+1)*c;if(r===2&&c===2){ans=n;cells.push({q:1})}else cells.push({svg:diceSvg(n)})}
+    } else {
+      const k=s.k==='k2'?2:1;
+      const bases=[ri(rng,1,2),ri(rng,2,3),ri(rng,3,4)];
+      for(let r=0;r<3;r++)for(let c=0;c<3;c++){const n=bases[r]+k*c;if(r===2&&c===2){ans=n;cells.push({q:1})}else cells.push({svg:diceSvg(n)})}
+    }
+    const set=new Set([ans]);const list=[ans];
+    for(const c of [ans-1,ans+1,ans-2,ans+2,ans-3,ans+3]){if(list.length>=6)break;if(c>=1&&c<=9&&!set.has(c)){set.add(c);list.push(c)}}
+    let g=0;while(list.length<6&&g++<30){const c=ri(rng,1,9);if(!set.has(c)){set.add(c);list.push(c)}}
+    const opts=list.map(n=>({html:diceSvg(n),key:'d'+n,ok:n===ans}));
+    return finishQ(rng,'Noktalar bir kurala göre artıyor. Soru işaretinin yerine hangisi gelmeli?',gridMain(cells),opts,s.cat,s.d);
+  },
+  latinMatrix(s,rng){
+    const shapes=shuffled(rng,['circle','square','tri']);
+    const fills=shuffled(rng,['o','s','d']);
+    const rows=[shapes,[shapes[1],shapes[2],shapes[0]],[shapes[2],shapes[0],shapes[1]]];
+    const diag=s.k==='diag';
+    const fillAt=(r,c)=>diag?fills[(r+c)%3]:fills[c];
+    const cells=[];
+    for(let r=0;r<3;r++)for(let c=0;c<3;c++){
+      if(r===2&&c===2){cells.push({q:1})}else cells.push({svg:svgW(baseShape(rows[r][c],fillAt(r,c)))});
+    }
+    const ansKey=rows[2][2]+'|'+fillAt(2,2);
+    const combos=[];
+    for(const sh of ['circle','square','tri'])for(const f of ['o','s','d'])combos.push(sh+'|'+f);
+    const others=shuffled(rng,combos.filter(c=>c!==ansKey)).slice(0,5);
+    const opts=[ansKey,...others].map(key=>{const [sh,f]=key.split('|');return {html:svgW(baseShape(sh,f)),key,ok:key===ansKey}});
+    return finishQ(rng,'Tabloda her satır ve sütun bir düzeni izliyor. Eksik parça hangisi?',gridMain(cells),opts,s.cat,s.d);
+  },
+  oddOne(s,rng){
+    let opts=[];
+    if(s.k==='fill'){
+      const odd=ri(rng,0,5);
+      opts=[0,1,2,3,4,5].map(i=>({html:svgW(baseShape('square',i===odd?'o':'s')),key:'f'+i,ok:i===odd}));
+    } else if(s.k==='count'){
+      const n=ri(rng,6,7),odd=ri(rng,0,5);
+      opts=[0,1,2,3,4,5].map(i=>({html:scatterSvg(rng,i===odd?n+1:n),key:'c'+i,ok:i===odd}));
+    } else { // chiral
+      const odd=ri(rng,0,5);
+      const angles=shuffled(rng,[0,60,120,180,240,300]);
+      opts=[0,1,2,3,4,5].map(i=>{
+        const inner=i===odd?rot(mirrorH(SHAPES.flag),angles[i]):rot(SHAPES.flag,angles[i]);
+        return {html:svgW(inner),key:'ch'+i,ok:i===odd};
+      });
+    }
+    return {prompt:'Hangisi diğerlerinden farklı?',main:'',options:opts,correct:opts.findIndex(o=>o.ok),cat:s.cat,d:s.d};
+  },
+  xorGrid(s,rng){
+    const bits=s.bits||4,MAX=(1<<bits)-1;
+    const rows=[];
+    for(let r=0;r<3;r++){
+      let A,B;do{A=ri(rng,1,MAX-1);B=ri(rng,1,MAX-1)}while((A^B)===0||A===B);
+      rows.push([A,B,A^B]);
+    }
+    const ans=rows[2][2],A=rows[2][0],B=rows[2][1];
+    const cells=[];
+    rows.forEach((row,r)=>row.forEach((m,c)=>cells.push(r===2&&c===2?{q:1}:{svg:maskSvg(m,bits)})));
+    const set=new Set([ans]);const list=[ans];
+    for(const c of [A|B,A&B,A,B,(~ans)&MAX]){if(list.length>=6)break;if(c>=1&&c<=MAX&&!set.has(c)){set.add(c);list.push(c)}}
+    let g=0;while(list.length<6&&g++<60){const c=ri(rng,1,MAX);if(!set.has(c)){set.add(c);list.push(c)}}
+    const opts=list.map(m=>({html:maskSvg(m,bits),key:'x'+m,ok:m===ans}));
+    return finishQ(rng,'İlk iki kutu, üçüncüyü bir kurala göre belirliyor (ilk iki satırı incele). Soru işaretinin yerine hangisi gelmeli?',gridMain(cells),opts,s.cat,s.d);
+  }
+};
+
+/* ---------- 30 sorunun planı (kolay → zor) ---------- */
+const SPECS=[
+  {t:'numSeq',k:'mul',cat:'sayisal',d:1},
+  {t:'countMatrix',k:'k2',cat:'oruntu',d:1},
+  {t:'rotSeq',shape:'halfsq',step:90,cat:'uzamsal',d:1},
+  {t:'numMatrix',k:'add',cat:'sayisal',d:1},
+  {t:'latinMatrix',cat:'mantik',d:2},
+  {t:'numSeq',k:'square',cat:'sayisal',d:2},
+  {t:'rotSeq',shape:'flag',step:-90,cat:'uzamsal',d:2},
+  {t:'oddOne',k:'count',cat:'oruntu',d:2},
+  {t:'numMatrix',k:'colrule',cat:'mantik',d:2},
+  {t:'mirror',k:'mh',cat:'uzamsal',d:2},
+  {t:'numSeq',k:'fib',cat:'sayisal',d:2},
+  {t:'twoRule',cat:'oruntu',d:2},
+  {t:'analogy',k:'r90',cat:'mantik',d:2},
+  {t:'oddOne',k:'count',cat:'oruntu',d:2},
+  {t:'latinMatrix',k:'diag',cat:'mantik',d:3},
+  {t:'xorGrid',bits:4,cat:'mantik',d:2},
+  {t:'analogy',k:'mh',cat:'uzamsal',d:3},
+  {t:'numSeq',k:'mixop',cat:'sayisal',d:3},
+  {t:'mirror',k:'rot90',cat:'uzamsal',d:2},
+  {t:'numMatrix',k:'mul',cat:'sayisal',d:3},
+  {t:'rotSeq',shape:'arrow',accel:1,cat:'uzamsal',d:3},
+  {t:'countMatrix',k:'rowk',cat:'oruntu',d:3},
+  {t:'numSeq',k:'sqoff',cat:'sayisal',d:3},
+  {t:'oddOne',k:'chiral',cat:'oruntu',d:3},
+  {t:'xorGrid',bits:9,cat:'mantik',d:3},
+  {t:'numSeq',k:'inter',cat:'sayisal',d:3},
+  {t:'latinMatrix',k:'diag',cat:'mantik',d:3},
+  {t:'mirror',k:'mhr',cat:'uzamsal',d:3},
+  {t:'numMatrix',k:'mulminus',cat:'sayisal',d:3},
+  {t:'oddOne',k:'chiral',cat:'oruntu',d:3}
+];
+const QUESTIONS=SPECS.map((s,i)=>GEN[s.t](s,mulberry32(0x9E3779B9^(i*2654435761))));
+
+const CATNAMES={oruntu:'Örüntü Tanıma',mantik:'Mantıksal Çıkarım',uzamsal:'Uzamsal Algı',sayisal:'Sayısal Akıl Yürütme'};
+
+/* ---------- durum ---------- */
+const N=QUESTIONS.length;
+let answers=Array(N).fill(null),cur=0,startTime=0,elapsed=0,gender=null;
+const $=id=>document.getElementById(id);
+const scr={landing:$('scr-landing'),test:$('scr-test'),calc:$('scr-calc'),pay:$('scr-pay'),result:$('scr-result')};
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function show(name){for(const k in scr)scr[k].hidden=(k!==name);window.scrollTo(0,0)}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),2600)}
+
+/* ---------- test render ---------- */
+const LETTERS=['A','B','C','D','E','F'];
+function render(){
+  const q=QUESTIONS[cur];
+  $('pfill').style.width=Math.round((cur)/N*100)+'%';
+  $('pcount').textContent=(cur+1)+'/'+N;
+  $('qprompt').textContent=q.prompt;
+  $('qmain').innerHTML=q.main;
+  $('qmain').style.display=q.main?'':'none';
+  const opts=$('qopts');opts.innerHTML='';
+  q.options.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.type='button';b.className='opt'+(answers[cur]===i?' sel':'');
+    b.setAttribute('aria-label','Seçenek '+LETTERS[i]);
+    b.innerHTML='<span class="letter">'+LETTERS[i]+'</span>'+o.html;
+    b.addEventListener('click',()=>select(i));
+    opts.appendChild(b);
+  });
+  $('btn-back').disabled=cur===0;
+  $('btn-back').style.opacity=cur===0?.45:1;
+  $('btn-skip').textContent=cur===N-1?'Bitir':'Atla →';
+  renderDots();
+}
+function renderDots(){
+  const d=$('dots');d.innerHTML='';
+  for(let i=0;i<N;i++){
+    const b=document.createElement('button');
+    b.type='button';
+    b.className='dot'+(answers[i]!==null?' done':'')+(i===cur?' cur':'');
+    b.setAttribute('aria-label','Soru '+(i+1));
+    b.addEventListener('click',()=>{cur=i;render()});
+    d.appendChild(b);
+  }
+}
+function select(i){
+  answers[cur]=i;
+  [...$('qopts').children].forEach((el,j)=>el.classList.toggle('sel',j===i));
+  renderDots();
+  setTimeout(()=>{ if(cur<N-1){cur++;render()} else finishAttempt(); },reduced?60:300);
+}
+function finishAttempt(){
+  const blank=answers.filter(a=>a===null).length;
+  if(blank>0){
+    const ov=document.createElement('div');
+    ov.className='overlay';
+    ov.innerHTML='<div class="sheet"><h3>'+blank+' soru boş</h3><p>Boş bırakılan sorular yanlış sayılır. Dönüp cevaplayabilirsin.</p>'+
+      '<button type="button" class="btn btn-primary" data-a="back">Sorulara dön</button>'+
+      '<button type="button" class="btn btn-ghost" data-a="fin">Yine de bitir</button></div>';
+    ov.addEventListener('click',e=>{
+      const a=e.target.getAttribute&&e.target.getAttribute('data-a');
+      if(a==='back'){ov.remove();cur=answers.indexOf(null);render()}
+      if(a==='fin'){ov.remove();finish()}
+    });
+    document.body.appendChild(ov);
+  } else finish();
+}
+
+/* ---------- hesaplama ---------- */
+function finish(){
+  elapsed=Math.round((Date.now()-startTime)/1000);
+  show('calc');
+  const steps=[...$('calcsteps').children];
+  steps.forEach(s=>s.classList.remove('on'));
+  const t=reduced?[50,100,150,300]:[700,1500,2300,3000];
+  steps.forEach((s,i)=>setTimeout(()=>s.classList.add('on'),t[i]));
+  setTimeout(()=>show('pay'),t[3]);
+}
+function normCdf(z){
+  const t=1/(1+0.2316419*Math.abs(z));
+  const d=0.3989423*Math.exp(-z*z/2);
+  let p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));
+  p=1-p;return z<0?1-p:p;
+}
+function compute(){
+  let earned=0,max=0,correct=0;
+  const cats={};
+  QUESTIONS.forEach((q,i)=>{
+    max+=q.d;
+    cats[q.cat]=cats[q.cat]||{c:0,n:0};
+    cats[q.cat].n++;
+    if(answers[i]===q.correct){earned+=q.d;correct++;cats[q.cat].c++}
+  });
+  const p=earned/max;
+  const iq=Math.max(65,Math.min(145,Math.round(65+p*80)));
+  const pct=Math.min(99,Math.max(1,Math.round(normCdf((iq-100)/15)*100)));
+  return {iq,pct,correct,cats};
+}
+function unlock(){
+  const r=compute();
+  show('result');
+  /* sayaç animasyonu */
+  const el=$('iqnum');
+  if(reduced){el.textContent=r.iq}
+  else{
+    const t0=performance.now(),dur=1100;
+    (function tick(now){
+      const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);
+      el.textContent=Math.round(65+(r.iq-65)*e);
+      if(k<1)requestAnimationFrame(tick);
+    })(t0);
+  }
+  $('pcttxt').textContent='%'+r.pct;
+  requestAnimationFrame(()=>{$('iqpin').style.left=((r.iq-60)/90*100)+'%'});
+  const cb=$('catbars');cb.innerHTML='';
+  Object.keys(CATNAMES).forEach(k=>{
+    const c=r.cats[k]||{c:0,n:1};
+    const pctc=Math.round(c.c/c.n*100);
+    const div=document.createElement('div');
+    div.className='cat';
+    div.innerHTML='<div class="row"><span>'+CATNAMES[k]+'</span><span>'+c.c+'/'+c.n+'</span></div><div class="bg"><div class="fg"></div></div>';
+    cb.appendChild(div);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{div.querySelector('.fg').style.width=pctc+'%'}));
+  });
+  const skipped=answers.filter(a=>a===null).length;
+  const mm=Math.floor(elapsed/60),ss=String(elapsed%60).padStart(2,'0');
+  $('statrow').innerHTML=
+    '<span class="stat">Doğru <b>'+r.correct+'/'+N+'</b></span>'+
+    '<span class="stat">Süre <b>'+mm+':'+ss+'</b></span>'+
+    '<span class="stat">Boş <b>'+skipped+'</b></span>';
+}
+
+/* ---------- olaylar ---------- */
+document.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',()=>{
+  gender=b.getAttribute('data-start');
+  answers=Array(N).fill(null);cur=0;startTime=Date.now();
+  show('test');render();
+}));
+$('btn-back').addEventListener('click',()=>{if(cur>0){cur--;render()}});
+$('btn-skip').addEventListener('click',()=>{if(cur<N-1){cur++;render()}else finishAttempt()});
+$('btn-unlock').addEventListener('click',()=>{toast('Prototip: ödeme adımı atlandı');unlock()});
+$('btn-restart').addEventListener('click',()=>{show('landing')});
+</script>
+</body>
+</html>
