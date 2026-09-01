@@ -309,11 +309,11 @@
         <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg>4 kategoride güçlü / gelişime açık yön analizi</li>
         <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg>Paylaşılabilir sonuç kartı</li>
       </ul>
-      <div class="price"><b>₺99</b><span>tek seferlik</span></div>
+      <div class="price"><b id="priceval">₺99</b><span>tek seferlik</span></div>
       <p class="noSub">Abonelik yok. Gizli ücret yok.</p>
       <button type="button" class="btn btn-primary" id="btn-unlock" style="width:100%;box-sizing:border-box">Sonucumu aç</button>
     </div>
-    <p class="protonote">Prototip: ödeme adımı temsilidir, buton sonucu doğrudan açar.<br>Canlı sürümde iyzico / Stripe bağlanacak.</p>
+    <p class="protonote" id="protonote">Prototip: ödeme adımı temsilidir, buton sonucu doğrudan açar.<br>Canlı sürümde Lemon Squeezy bağlanacak.</p>
   </section>
 
   <!-- ============ RESULT ============ -->
@@ -602,6 +602,17 @@ const QUESTIONS=SPECS.map((s,i)=>GEN[s.t](s,mulberry32(0x9E3779B9^(i*2654435761)
 
 const CATNAMES={oruntu:'Örüntü Tanıma',mantik:'Mantıksal Çıkarım',uzamsal:'Uzamsal Algı',sayisal:'Sayısal Akıl Yürütme'};
 
+/* ---------- ödeme (Lemon Squeezy) ----------
+   Kurulum: Lemon Squeezy'de ürünü oluştur, "checkoutUrl"e ürünün ödeme
+   linkini yapıştır ve enabled'ı true yap. Kapalıyken buton sonucu
+   doğrudan açar (prototip modu). Detay: SETUP.md */
+const PAY={
+  enabled:false,
+  checkoutUrl:'',          /* örn: https://cortiq.lemonsqueezy.com/buy/xxxxxxxx */
+  priceLabel:'₺99',        /* ödeme duvarındaki fiyat — Lemon Squeezy fiyatıyla aynı olsun */
+  verifyUrl:''             /* opsiyonel: Cloudflare Worker doğrulama ucu (SETUP.md) */
+};
+
 /* ---------- durum ---------- */
 const N=QUESTIONS.length;
 const TOTAL_SEC=5*60;                /* toplam süre — tek satırdan değiştirilir */
@@ -767,7 +778,59 @@ document.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',
 }));
 $('btn-back').addEventListener('click',()=>{if(cur>0){cur--;render()}});
 $('btn-skip').addEventListener('click',()=>{if(cur<N-1){cur++;render()}else finishAttempt()});
-$('btn-unlock').addEventListener('click',()=>{toast('Prototip: ödeme adımı atlandı');unlock()});
+/* ---------- ödeme akışı ---------- */
+let lemonReady=null;
+function loadLemon(){
+  if(lemonReady)return lemonReady;
+  lemonReady=new Promise((res,rej)=>{
+    if(window.LemonSqueezy)return res();
+    const s=document.createElement('script');
+    s.src='https://assets.lemonsqueezy.com/lemon.js';s.defer=true;
+    s.onload=()=>res();s.onerror=()=>rej(new Error('lemon.js yüklenemedi'));
+    document.head.appendChild(s);
+  });
+  return lemonReady;
+}
+function verifyAndUnlock(order){
+  const id=order&&(order.id||order.identifier||order.order_id);
+  if(!PAY.verifyUrl||!id){ // sunucu doğrulaması yoksa Lemon başarı sinyaline güven
+    try{localStorage.setItem('cortiq_paid','1')}catch(e){}
+    unlock();return;
+  }
+  fetch(PAY.verifyUrl+'?order_id='+encodeURIComponent(id))
+    .then(r=>r.json()).then(d=>{
+      if(d&&d.ok){try{localStorage.setItem('cortiq_paid','1')}catch(e){}unlock()}
+      else toast('Ödeme doğrulanamadı, destek ile iletişime geç');
+    }).catch(()=>{try{localStorage.setItem('cortiq_paid','1')}catch(e){}unlock()});
+}
+function openCheckout(){
+  const btn=$('btn-unlock');btn.disabled=true;btn.textContent='Ödeme açılıyor…';
+  const done=()=>{btn.disabled=false;btn.textContent='Sonucumu aç'};
+  loadLemon().then(()=>{
+    if(window.createLemonSqueezy)window.createLemonSqueezy();
+    window.LemonSqueezy.Setup({eventHandler:e=>{
+      if(e.event==='Checkout.Success'){done();verifyAndUnlock(e.data&&e.data.order&&e.data.order.data?e.data.order.data:e.data&&e.data.order)}
+      if(e.event==='Checkout.Closed')done();
+    }});
+    const u=PAY.checkoutUrl+(PAY.checkoutUrl.includes('?')?'&':'?')+'embed=1';
+    window.LemonSqueezy.Url.Open(u);
+  }).catch(()=>{ // overlay açılamazsa yönlendir
+    location.href=PAY.checkoutUrl;
+  });
+}
+$('btn-unlock').addEventListener('click',()=>{
+  if(!PAY.enabled){toast('Prototip: ödeme adımı atlandı');unlock();return}
+  if(!PAY.checkoutUrl){toast('Ödeme linki henüz ayarlanmadı');return}
+  saveAttempt();
+  openCheckout();
+});
+/* ödeme öncesi cevapları sakla — overlay/yönlendirme sonrası kaybolmasın */
+function saveAttempt(){
+  try{localStorage.setItem('cortiq_attempt',JSON.stringify({answers,elapsed,ts:Date.now()}))}catch(e){}
+}
+/* config'i arayüze yansıt (fiyat + prototip notu) */
+$('priceval').textContent=PAY.priceLabel;
+if(PAY.enabled)$('protonote').hidden=true;
 $('btn-restart').addEventListener('click',()=>{stopTimer();resetTimerLabel();show('landing')});
 resetTimerLabel();
 </script>
