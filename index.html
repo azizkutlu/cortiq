@@ -611,8 +611,35 @@ const PAY={
   enabled:false,
   checkoutUrl:'',          /* örn: https://cortiq.lemonsqueezy.com/buy/xxxxxxxx */
   priceLabel:'₺99',        /* ödeme duvarındaki fiyat — Lemon Squeezy fiyatıyla aynı olsun */
+  value:99,                /* satın alma değeri (reklam optimizasyonu için) */
+  currency:'TRY',
   verifyUrl:''             /* opsiyonel: Cloudflare Worker doğrulama ucu (SETUP.md) */
 };
+
+/* ---------- reklam ölçümü (Meta Pixel + Google tag) ----------
+   Hesapları açınca ID'leri yapıştır; boşken hiçbir şey yüklenmez.
+   Olaylar: test başlangıcı, ödeme duvarı, satın alma. Detay: PAZARLAMA.md */
+const TRACK={
+  metaPixelId:'',          /* Meta → Events Manager → Pixel ID (sadece rakam) */
+  googleTagId:''           /* Google Ads: 'AW-XXXXXXXXXX'  ·  GA4: 'G-XXXXXXXXXX' */
+};
+function loadTracking(){
+  if(TRACK.metaPixelId){
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init',TRACK.metaPixelId);fbq('track','PageView');
+  }
+  if(TRACK.googleTagId){
+    const g=document.createElement('script');g.async=true;g.src='https://www.googletagmanager.com/gtag/js?id='+TRACK.googleTagId;document.head.appendChild(g);
+    window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};
+    gtag('js',new Date());gtag('config',TRACK.googleTagId);
+  }
+}
+function track(metaEvent,gtagEvent,params){
+  try{if(window.fbq&&metaEvent)fbq('track',metaEvent,params||{})}catch(e){}
+  try{if(window.gtag&&gtagEvent)gtag('event',gtagEvent,params||{})}catch(e){}
+}
 
 /* ---------- durum ---------- */
 const N=QUESTIONS.length;
@@ -715,7 +742,7 @@ function finish(){
   steps.forEach(s=>s.classList.remove('on'));
   const t=reduced?[50,100,150,300]:[700,1500,2300,3000];
   steps.forEach((s,i)=>setTimeout(()=>s.classList.add('on'),t[i]));
-  setTimeout(()=>show('pay'),t[3]);
+  setTimeout(()=>{show('pay');track('InitiateCheckout','reach_paywall')},t[3]);
 }
 function normCdf(z){
   const t=1/(1+0.2316419*Math.abs(z));
@@ -776,6 +803,7 @@ document.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',
   gender=b.getAttribute('data-start');
   answers=Array(N).fill(null);cur=0;startTime=Date.now();
   show('test');render();startTimer();
+  track('Lead','test_start');
 }));
 $('btn-back').addEventListener('click',()=>{if(cur>0){cur--;render()}});
 $('btn-skip').addEventListener('click',()=>{if(cur<N-1){cur++;render()}else finishAttempt()});
@@ -792,17 +820,20 @@ function loadLemon(){
   });
   return lemonReady;
 }
+let purchaseTracked=false;
+function markPaid(){
+  try{localStorage.setItem('cortiq_paid','1')}catch(e){}
+  if(!purchaseTracked){purchaseTracked=true;track('Purchase','purchase',{value:PAY.value,currency:PAY.currency})}
+  unlock();
+}
 function verifyAndUnlock(order){
   const id=order&&(order.id||order.identifier||order.order_id);
-  if(!PAY.verifyUrl||!id){ // sunucu doğrulaması yoksa Lemon başarı sinyaline güven
-    try{localStorage.setItem('cortiq_paid','1')}catch(e){}
-    unlock();return;
-  }
+  if(!PAY.verifyUrl||!id){markPaid();return} // sunucu doğrulaması yoksa Lemon başarı sinyaline güven
   fetch(PAY.verifyUrl+'?order_id='+encodeURIComponent(id))
     .then(r=>r.json()).then(d=>{
-      if(d&&d.ok){try{localStorage.setItem('cortiq_paid','1')}catch(e){}unlock()}
+      if(d&&d.ok)markPaid();
       else toast('Ödeme doğrulanamadı, destek ile iletişime geç');
-    }).catch(()=>{try{localStorage.setItem('cortiq_paid','1')}catch(e){}unlock()});
+    }).catch(()=>markPaid());
 }
 function openCheckout(){
   const btn=$('btn-unlock');btn.disabled=true;btn.textContent='Ödeme açılıyor…';
@@ -832,6 +863,7 @@ function saveAttempt(){
 /* config'i arayüze yansıt (fiyat + prototip notu) */
 $('priceval').textContent=PAY.priceLabel;
 if(PAY.enabled)$('protonote').hidden=true;
+loadTracking();
 $('btn-restart').addEventListener('click',()=>{stopTimer();resetTimerLabel();show('landing')});
 resetTimerLabel();
 </script>
