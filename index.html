@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="30 soruluk görsel mantık IQ testi: örüntü, mantık, uzamsal algı ve sayısal akıl yürütme.">
+<meta name="description" content="20 soruluk görsel mantık IQ testi: örüntü, mantık, uzamsal algı ve sayısal akıl yürütme.">
 <meta name="theme-color" content="#0B7285">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 <style>[hidden]{display:none!important}html,body{margin:0;padding:0}</style>
@@ -230,7 +230,7 @@
     <ul class="checks">
       <li>
         <span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg></span>
-        <span><b>30 soru</b>, kolaydan zora sıralı — görsel mantık, örüntü ve sayısal akıl yürütme</span>
+        <span><b>20 soru</b>, kolaydan zora sıralı — görsel mantık, örüntü ve sayısal akıl yürütme</span>
       </li>
       <li>
         <span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 L6 12 L13.5 4"/></svg></span>
@@ -264,7 +264,7 @@
         <b id="timeval">5:00</b>
       </span>
       <div class="track"><div class="fill" id="pfill"></div></div>
-      <span class="counter" id="pcount">1/30</span>
+      <span class="counter" id="pcount">1/20</span>
     </div>
     <h2 class="qprompt" id="qprompt"></h2>
     <div class="qmain" id="qmain"></div>
@@ -565,12 +565,11 @@ const GEN={
   }
 };
 
-/* ---------- 30 sorunun planı (kolay → zor) ---------- */
+/* ---------- 20 sorunun planı (kolay → zor, kategoriler 5'er) ---------- */
 const SPECS=[
   {t:'numSeq',k:'mul',cat:'sayisal',d:1},
   {t:'countMatrix',k:'k2',cat:'oruntu',d:1},
   {t:'rotSeq',shape:'halfsq',step:90,cat:'uzamsal',d:1},
-  {t:'numMatrix',k:'add',cat:'sayisal',d:1},
   {t:'latinMatrix',cat:'mantik',d:2},
   {t:'numSeq',k:'square',cat:'sayisal',d:2},
   {t:'rotSeq',shape:'flag',step:-90,cat:'uzamsal',d:2},
@@ -580,23 +579,14 @@ const SPECS=[
   {t:'numSeq',k:'fib',cat:'sayisal',d:2},
   {t:'twoRule',cat:'oruntu',d:2},
   {t:'analogy',k:'r90',cat:'mantik',d:2},
-  {t:'oddOne',k:'count',cat:'oruntu',d:2},
-  {t:'latinMatrix',k:'diag',cat:'mantik',d:3},
   {t:'xorGrid',bits:4,cat:'mantik',d:2},
-  {t:'analogy',k:'mh',cat:'uzamsal',d:3},
   {t:'numSeq',k:'mixop',cat:'sayisal',d:3},
-  {t:'mirror',k:'rot90',cat:'uzamsal',d:2},
   {t:'numMatrix',k:'mul',cat:'sayisal',d:3},
   {t:'rotSeq',shape:'arrow',accel:1,cat:'uzamsal',d:3},
-  {t:'countMatrix',k:'rowk',cat:'oruntu',d:3},
-  {t:'numSeq',k:'sqoff',cat:'sayisal',d:3},
   {t:'oddOne',k:'chiral',cat:'oruntu',d:3},
   {t:'xorGrid',bits:9,cat:'mantik',d:3},
-  {t:'numSeq',k:'inter',cat:'sayisal',d:3},
-  {t:'latinMatrix',k:'diag',cat:'mantik',d:3},
   {t:'mirror',k:'mhr',cat:'uzamsal',d:3},
-  {t:'numMatrix',k:'mulminus',cat:'sayisal',d:3},
-  {t:'oddOne',k:'chiral',cat:'oruntu',d:3}
+  {t:'countMatrix',k:'rowk',cat:'oruntu',d:3}
 ];
 const QUESTIONS=SPECS.map((s,i)=>GEN[s.t](s,mulberry32(0x9E3779B9^(i*2654435761))));
 
