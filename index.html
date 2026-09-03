@@ -742,7 +742,7 @@ function finish(){
   steps.forEach(s=>s.classList.remove('on'));
   const t=reduced?[50,100,150,300]:[700,1500,2300,3000];
   steps.forEach((s,i)=>setTimeout(()=>s.classList.add('on'),t[i]));
-  setTimeout(()=>{show('pay');track('InitiateCheckout','reach_paywall')},t[3]);
+  setTimeout(()=>{show('pay');saveAttempt();track('InitiateCheckout','reach_paywall')},t[3]);
 }
 function normCdf(z){
   const t=1/(1+0.2316419*Math.abs(z));
@@ -773,7 +773,7 @@ function unlock(){
   else{
     const t0=performance.now(),dur=1100;
     (function tick(now){
-      const k=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-k,3);
+      const k=Math.min(1,Math.max(0,(now-t0)/dur)),e=1-Math.pow(1-k,3);
       el.textContent=Math.round(65+(r.iq-65)*e);
       if(k<1)requestAnimationFrame(tick);
     })(t0);
@@ -802,6 +802,8 @@ function unlock(){
 document.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',()=>{
   gender=b.getAttribute('data-start');
   answers=Array(N).fill(null);cur=0;startTime=Date.now();
+  try{localStorage.removeItem('cortiq_paid');localStorage.removeItem('cortiq_attempt')}catch(e){}
+  purchaseTracked=false;
   show('test');render();startTimer();
   track('Lead','test_start');
 }));
@@ -835,6 +837,32 @@ function verifyAndUnlock(order){
       else toast('Ödeme doğrulanamadı, destek ile iletişime geç');
     }).catch(()=>markPaid());
 }
+/* kayıtlı denemeyi geri yükleyip sonucu göster (yenileme / geri dönüş) */
+function showSavedResult(){
+  try{
+    const raw=localStorage.getItem('cortiq_attempt');if(!raw)return false;
+    const a=JSON.parse(raw);if(!a||!Array.isArray(a.answers)||a.answers.length!==N)return false;
+    answers=a.answers;elapsed=a.elapsed||0;unlock();return true;
+  }catch(e){return false}
+}
+/* sayfa açılışında: ödemeden dönüldü mü ya da bu tarayıcı zaten ödedi mi? */
+function bootPaymentReturn(){
+  const p=new URLSearchParams(location.search);
+  const returned=p.get('paid')==='1'||p.has('order_id');
+  const finishUp=()=>{try{localStorage.setItem('cortiq_paid','1')}catch(e){}
+    if(!purchaseTracked){purchaseTracked=true;track('Purchase','purchase',{value:PAY.value,currency:PAY.currency})}
+    showSavedResult();};
+  if(returned){
+    const id=p.get('order_id');
+    if(PAY.verifyUrl&&id){
+      fetch(PAY.verifyUrl+'?order_id='+encodeURIComponent(id)).then(r=>r.json())
+        .then(d=>{if(d&&d.ok)finishUp()}).catch(finishUp);
+    } else finishUp();
+    return true;
+  }
+  try{if(localStorage.getItem('cortiq_paid')==='1')return showSavedResult()}catch(e){}
+  return false;
+}
 function openCheckout(){
   const btn=$('btn-unlock');btn.disabled=true;btn.textContent='Ödeme açılıyor…';
   const done=()=>{btn.disabled=false;btn.textContent='Sonucumu aç'};
@@ -866,6 +894,7 @@ if(PAY.enabled)$('protonote').hidden=true;
 loadTracking();
 $('btn-restart').addEventListener('click',()=>{stopTimer();resetTimerLabel();show('landing')});
 resetTimerLabel();
+bootPaymentReturn();
 </script>
 </body>
 </html>
