@@ -479,7 +479,7 @@ const GEN={
     return finishQ(rng,'Şekil bir kurala göre dönüyor. Sıradaki hangisi?',main,opts,s.cat,s.d);
   },
   twoRule(s,rng){
-    const shape=SHAPES.halfsq,start=45*ri(rng,1,4);
+    const shape=SHAPES.halfsq,start=90*ri(rng,0,3);   /* hep eksene hizalı (dik) başla */
     const seq=[0,1,2,3].map(i=>({a:norm360(start+90*i),sc:i%2?0.62:1}));
     const ansA=norm360(start),ansS=1;
     const tile=(a,sc)=>'<div class="tile" style="width:56px;height:56px;padding:6px">'+svgW(rot(scaleG(shape,sc),a))+'</div>';
