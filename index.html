@@ -261,7 +261,7 @@
     <div class="topbar">
       <span class="timeleft" id="timeleft" aria-label="Kalan süre">
         <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 6 V9 L10 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 2 H10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <b id="timeval">5:00</b>
+        <b id="timeval">3:20</b>
       </span>
       <div class="track"><div class="fill" id="pfill"></div></div>
       <span class="counter" id="pcount">1/20</span>
@@ -616,7 +616,7 @@ const PAY={
 
 /* ---------- durum ---------- */
 const N=QUESTIONS.length;
-const TOTAL_SEC=5*60;                /* toplam süre — tek satırdan değiştirilir */
+const TOTAL_SEC=200;                 /* toplam süre — tek satırdan değiştirilir */
 let answers=Array(N).fill(null),cur=0,startTime=0,elapsed=0,gender=null;
 let deadline=0,timerId=null;
 const $=id=>document.getElementById(id);
